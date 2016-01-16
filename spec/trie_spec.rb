@@ -40,3 +40,39 @@ describe Trie do
 		end
 	end
 end
+
+describe TrieNode do
+	before(:all) do
+		@trie = Trie.new
+		@words = ['aardvark', 'applesauce', 'apple', 'breathe', 'breath', 'breathed']
+		@words.each do |word|
+			@trie.add_word(word)
+		end
+		@node = @trie.get_child_node_by_character('a')
+	end
+
+	describe '#valid_suffix(string)?' do
+		it 'should return true for a valid suffix' do
+			expect(@node.valid_suffix?('pple')).to eq(true)
+			expect(@node.valid_suffix?('pplesauce')).to eq(true)
+			expect(@node.valid_suffix?('ardvark')).to eq(true)
+		end
+
+		it 'should return false for a string that does not complete a word' do
+			expect(@node.valid_suffix?('ppl')).to eq(false)
+			expect(@node.valid_suffix?('pplesauc')).to eq(false)
+		end
+	end
+
+	describe '#valid_word_contents?(string)' do
+		it 'should return true for valid word contents' do
+			expect(@node.valid_word_contents?('ppl')).to eq(true)
+			expect(@node.valid_word_contents?('pplesauc')).to eq(true)
+		end
+
+		it 'should return false for invalid word contents' do
+			expect(@node.valid_word_contents?('pqr')).to eq(false)
+			expect(@node.valid_word_contents?('pplesu')).to eq(false)
+		end
+	end
+end

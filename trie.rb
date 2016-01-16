@@ -78,4 +78,22 @@ class TrieNode < Trie
 		@value = value
 		@children = {}
 	end
+
+	def valid_suffix?(lookup_string)
+		valid_word?(lookup_string)
+	end
+
+	def valid_word_contents?(lookup_string)
+		valid_prefix?(lookup_string)
+	end
+
+	private
+
+		def valid_prefix?(lookup_string)
+			super(lookup_string)
+		end
+
+		def valid_word?(lookup_string)
+			super(lookup_string)
+		end
 end
