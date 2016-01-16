@@ -1,36 +1,4 @@
-module Inserter
-	def add_child(child_node)
-		existing_child = @children[child_node.value]
-
-		if !existing_child
-			@children[child_node.value] = child_node
-		elsif existing_child && !existing_child.terminates
-			@children[child_node.value].terminates = child_node.terminates
-		end
-
-		@children[child_node.value]
-	end
-end
-
-class TrieNode
-	include Inserter
-	attr_accessor :terminates
-	attr_reader :value
-
-	def initialize(value, terminates = false)
-		@terminates = terminates
-		@value = value
-		@children = {}
-	end
-
-	def get_child_node_by_character(char)
-		@children[char]
-	end
-end
-
 class Trie
-	include Inserter
-
 	def initialize
 		@children = {}
 	end
@@ -57,6 +25,10 @@ class Trie
 		self
 	end
 
+	def get_child_node_by_character(char)
+		@children[char]
+	end
+
 	def valid_prefix?(string)
 		!!get_last_letter_node(string)
 	end
@@ -65,6 +37,20 @@ class Trie
 		last_letter_node = get_last_letter_node(string)
 		!!last_letter_node && last_letter_node.terminates
 	end
+
+	protected
+
+		def add_child(child_node)
+			existing_child = @children[child_node.value]
+
+			if !existing_child
+				@children[child_node.value] = child_node
+			elsif existing_child && !existing_child.terminates
+				@children[child_node.value].terminates = child_node.terminates
+			end
+
+			@children[child_node.value]
+		end
 
 	private
 
@@ -81,4 +67,15 @@ class Trie
 
 			current_node
 		end
+end
+
+class TrieNode < Trie
+	attr_accessor :terminates
+	attr_reader :value
+
+	def initialize(value, terminates = false)
+		@terminates = terminates
+		@value = value
+		@children = {}
+	end
 end
