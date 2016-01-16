@@ -15,9 +15,9 @@ the full test suite. It may be necessary to first install RSpec by running
 The classic tree implementation that allows `O(log(n))` insertion and `O(log(n))` 
 lookup time. I'm not sure what the purpose of these is anymore, since hash 
 tables enable `O(1)` lookup, insertion and deletion. Once the tree has been 
-constructed, one can output a sorted array from it in `O(n)` time. But 
-constructing a BinarySearchTree from an unsorted Array runs in `O(n * log(n))` 
-time, like standard comparison sort algorithms.
+constructed, one can output a sorted array from it in `O(n)` time via in-order 
+traversal. But constructing a BinarySearchTree from an unsorted array runs in 
+`O(n * log(n))` time, like standard comparison sort algorithms.
 
 My binary search tree implementation allows insertion of duplicate values; it 
 stores one new node for each value inserted, regardless if the value has already 
