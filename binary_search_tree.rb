@@ -1,4 +1,6 @@
-module ArrayConstructor
+require 'set'
+
+module TreeConstructor
 	def from_array(array)
 		build_min_depth_tree(array.sort)
 	end
@@ -15,7 +17,7 @@ module ArrayConstructor
 
 			mid_idx = sorted_array.length / 2
 
-			current_node ||= BinarySearchTreeNode.new(sorted_array[mid_idx])
+			current_node ||= BinarySearchTreeNode.new(sorted_array[mid_idx], parent_node)
 			current_node.left = 
 				build_min_depth_tree(sorted_array[0...mid_idx], current_node.left, current_node)
 			current_node.right = 
@@ -25,15 +27,29 @@ module ArrayConstructor
 		end
 end
 
-module BreadthFirstSearch
-	def breadth_first_traversal(node = self, &block)
-		node_queue = []
+module BreadthFirstTraversal
+	def breadth_first_traversal(&block)
+		node_queue, visited_nodes = [], Set.new
+		node_queue.push(self)
+
+		until node_queue.empty?
+			current_node = node_queue.shift
+			yield current_node
+
+			if current_node.left && !visited_nodes.include?(current_node.left)
+				visited_nodes << current_node.left
+				node_queue << current_node.left
+			end
+			
+			if current_node.right && !visited_nodes.include?(current_node.right)
+				visited_nodes << current_node.right
+				node_queue << current_node.right
+			end
+		end
 	end
 end
 
-module DepthFirstSearch
-	# Each of these can start at an arbitrary node within the tree
-
+module DepthFirstTraversal
 	def in_order_traversal(node = self, &block)
 		if node.left
 			in_order_traversal(node.left, &block) 
@@ -72,23 +88,19 @@ module DepthFirstSearch
 end
 
 class BinarySearchTreeNode
-	extend ArrayConstructor
-	include BreadthFirstSearch
-	include DepthFirstSearch
+	extend TreeConstructor
+	include BreadthFirstTraversal
+	include DepthFirstTraversal
 
 	attr_accessor :parent, :left, :right, :value
 
-	def initialize(value, parent = nil)
-		@parent = parent
+	def initialize(value, parent_node = nil)
+		@parent = parent_node
 		@value = value
 		@left, @right = nil, nil
 	end
 
 	def find_node_by_value(val)
-		# Return statements are unneeded because the contents of each if statement 
-		# is the last line evaluated, when that if statement is triggered. If no if 
-		# statement is triggered, the method returns nil because the last line is 
-		# empty.
 		if val == value
 			self
 		elsif left && val < value
@@ -97,7 +109,7 @@ class BinarySearchTreeNode
 			right.find_node_by_value(val)
 		end
 	end
-
+ 
 	def insert(val)
 		# Returns the new node corresponding to the inserted value
 		if left && val <= value
@@ -105,10 +117,42 @@ class BinarySearchTreeNode
 		elsif right && val > value
 			right.insert(val)
 		elsif val <= value
-			@left = BinarySearchTreeNode.new(val)
+			@left = BinarySearchTreeNode.new(val, self)
 		else
-			@right = BinarySearchTreeNode.new(val)
+			@right = BinarySearchTreeNode.new(val, self)
 		end
+	end
+
+	def remove(val, called_on_duplicate_value = false)
+		# Removes and returns node with value val. If val is stored in more than one 
+		# node instance, this method removes only the minimum-depth node instance.
+		
+		if called_on_duplicate_value
+			node_to_delete = left.find_node_by_value(val)
+		else
+			node_to_delete = find_node_by_value(val)
+		end
+
+		return nil unless node_to_delete
+
+		if !node_to_delete.left && !node_to_delete.right
+			BinarySearchTreeNode.replace_node_with_other(node_to_delete, nil)
+		elsif node_to_delete.left && node_to_delete.right
+			in_order_predecessor = node_to_delete.left.right_most_leaf
+			if node_to_delete.value == in_order_predecessor.value
+				node_to_delete.remove(in_order_predecessor.value, true)
+			else
+				node_to_delete.remove(in_order_predecessor.value)
+			end
+
+			node_to_delete.value = in_order_predecessor.value
+		else
+			replacement_node = node_to_delete.left || node_to_delete.right
+			replacement_node.parent = node_to_delete.parent
+			BinarySearchTreeNode.replace_node_with_other(node_to_delete, replacement_node)
+		end
+
+		node_to_delete
 	end
 
 	def left_most_leaf
@@ -128,10 +172,8 @@ class BinarySearchTreeNode
 		def self.replace_node_with_other(node_to_delete, replacement_node)
 			if node_to_delete == node_to_delete.parent.left
 				node_to_delete.parent.left = replacement_node
-				return node_to_delete
-			elsif node_to_delete == node_to_delete.parent.left
+			elsif node_to_delete == node_to_delete.parent.right
 				node_to_delete.parent.right = replacement_node
-				return node_to_delete
 			end
 		end
 end
