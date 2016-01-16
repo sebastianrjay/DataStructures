@@ -1,13 +1,4 @@
-class TrieNode
-	attr_accessor :terminates
-	attr_reader :value
-
-	def initialize(value, terminates = false)
-		@terminates = terminates
-		@value = value
-		@children = {}
-	end
-
+module Inserter
 	def add_child(child_node)
 		existing_child = @children[child_node.value]
 
@@ -19,6 +10,18 @@ class TrieNode
 
 		@children[child_node.value]
 	end
+end
+
+class TrieNode
+	include Inserter
+	attr_accessor :terminates
+	attr_reader :value
+
+	def initialize(value, terminates = false)
+		@terminates = terminates
+		@value = value
+		@children = {}
+	end
 
 	def get_child_node_by_character(char)
 		@children[char]
@@ -26,6 +29,8 @@ class TrieNode
 end
 
 class Trie
+	include Inserter
+
 	def initialize
 		@children = {}
 	end
@@ -62,16 +67,6 @@ class Trie
 	end
 
 	private
-
-		def add_child(child_node)
-			existing_child = @children[child_node.value]
-
-			if !existing_child || (existing_child && !existing_child.terminates)
-				@children[child_node.value] = child_node
-			end
-
-			@children[child_node.value]
-		end
 
 		def get_last_letter_node(lookup_string)
 			begin
