@@ -28,9 +28,9 @@ module TreeConstructor
 end
 
 module BreadthFirstTraversal
-	def breadth_first_traversal(&block)
+	def breadth_first_traversal(start_node = self, &block)
 		node_queue, visited_nodes = [], Set.new
-		node_queue.push(self)
+		node_queue.push(start_node)
 
 		until node_queue.empty?
 			current_node = node_queue.shift
