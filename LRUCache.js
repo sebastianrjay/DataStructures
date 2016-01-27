@@ -7,11 +7,11 @@ class LRUCache {
 		this._list = new DoublyLinkedList():
 	}
 
-	_getNode (nodeID, fetchCallbackForMissingData) {
+	_getNode (id, fetchCallbackForMissingData) {
 		let returnNode = null;
 
 		if(this._memoryStore[id]) {
-			returnNode = this._list.removeNode(this._memoryStore[nodeID]);
+			returnNode = this._list.removeNode(this._memoryStore[id]);
 			this._list.push(returnNode);
 		} else if(fetchCallbackForMissingData) {
 			let data = fetchCallbackForMissingData(id);
@@ -27,8 +27,8 @@ class LRUCache {
 		return returnNode;
 	}
 
-	get (nodeID, fetchCallbackForMissingData) {
-		let returnNode = this._getNode(nodeID, fetchCallbackForMissingData);
+	get (id, fetchCallbackForMissingData) {
+		let returnNode = this._getNode(id, fetchCallbackForMissingData);
 
 		return (returnNode ? returnNode.getData() : null);
 	}
@@ -37,12 +37,12 @@ class LRUCache {
 		return this._maxSize;
 	}
 
-	set (nodeID, data) {
-		let node = this._getNode(nodeID);
+	set (id, data) {
+		let node = this._getNode(id);
 		if(node) {
 			node.setData(data);
 		} else {
-			node = this._memoryStore[nodeID] = new DoublyLinkedListNode(data);
+			node = this._memoryStore[id] = new DoublyLinkedListNode(data);
 			this._list.push(node);
 		}
 
