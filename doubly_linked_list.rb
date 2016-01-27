@@ -49,9 +49,11 @@ class DoublyLinkedList
 		if node == tail
 			node.prev.next = nil
 			@tail = node.prev
+			node.prev = nil
 		elsif node == head
 			@head = node.next
 			node.next.prev = nil
+			node.next = nil
 		else
 			node.prev.next = node.next
 			node.next.prev = node.prev
