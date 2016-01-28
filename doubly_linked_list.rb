@@ -61,4 +61,15 @@ class DoublyLinkedList
 
 		node
 	end
+
+	def to_a
+		array, current_node = [], head
+
+		while current_node
+			array << current_node
+			current_node = current_node.next
+		end
+
+		array
+	end
 end
