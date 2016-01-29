@@ -36,6 +36,8 @@ class DoublyLinkedList
 	end
 
 	def node_count(value = nil)
+		# Counts the number of occurrences of a specific node value within the list
+		# in O(1) time; counts the total number of nodes if no value is given.
 		return @nodes.count unless value
 
 		@node_value_counts[value]
