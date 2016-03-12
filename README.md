@@ -1,6 +1,7 @@
 # About #
 This is the repository where I implement some common data structures. I've put 
-my graph implementations in their own repository, called "Graphs."
+my graph implementations in 
+[their own repository, called "Graphs."](https://https://github.com/sebastianrjay/Graphs)
 
 # Tests #
 So far, the tests in the `spec` directory test only my `Trie` implementation.
@@ -24,6 +25,18 @@ stores one new node for each value inserted, regardless if the value has already
 been stored to another node in the tree. It also deletes only one node when 
 removing a value existing in multiple nodes. Simpler (and perhaps more elegant) 
 implementations prohibit insertion of duplicate values.
+
+## Doubly Linked List ##
+Not much to say here. The Ruby version is instantiated from an array of nodes, 
+while the JavaScript version's constructor takes a head and tail node as 
+arguments, forcing the programmer to later add other nodes via the appendNode 
+or insertNode methods.
+
+## Least Recently Used Cache (LRU Cache) ##
+Whee, ES6. The cache has a limited size, as specified in the constructor. The 
+fetchCallbackForMissingData argument to the LRUCache#get method is a callback 
+that returns data from someplace external to the cache, and is invoked if the 
+cache does not contain the data sought when invoking LRUCache#get.
 
 ## Trie ##
 This data structure allows one to check if a string is a valid prefix or a valid 

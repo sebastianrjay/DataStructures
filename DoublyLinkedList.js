@@ -3,8 +3,6 @@ class DoublyLinkedListNode {
 		this._data = data;
 		this.prev = prev || null;
 		this.next = next || null;
-		prev ? this.prev = prev : this._nodeCount--;
-		next ? this.next = next : this._nodeCount--;
 	}
 
 	getData () {
@@ -71,6 +69,17 @@ class DoublyLinkedList {
 		node.next, node.prev = null, null;
 
 		return node;
+	}
+
+	toArray () {
+		let [currentNode, array] = [this.head, []];
+
+		while(currentNode) {
+			array.push(currentNode);
+			currentNode = currentNode.next;
+		}
+
+		return array;
 	}
 
 	unshift (newNode) {

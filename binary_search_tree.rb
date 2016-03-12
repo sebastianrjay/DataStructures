@@ -50,39 +50,39 @@ module BreadthFirstTraversal
 end
 
 module DepthFirstTraversal
-	def in_order_traversal(node = self, &block)
-		if node.left
-			in_order_traversal(node.left, &block) 
+	def in_order_traversal(current_node = self, &block)
+		if current_node.left
+			in_order_traversal(current_node.left, &block) 
 		end
 
-		yield node
+		yield current_node
 
-		if node.right
-			in_order_traversal(node.right, &block)
+		if current_node.right
+			in_order_traversal(current_node.right, &block)
 		end
 	end
 
-	def post_order_traversal(node = self, &block)
-		if node.left
-			pre_order_traversal(node.left, &block) 
+	def post_order_traversal(current_node = self, &block)
+		if current_node.left
+			pre_order_traversal(current_node.left, &block) 
 		end
 
-		if node.right
-			pre_order_traversal(node.right, &block)
+		if current_node.right
+			pre_order_traversal(current_node.right, &block)
 		end
 
-		yield node
+		yield current_node
 	end
 
-	def pre_order_traversal(node = self, &block)
-		yield node
+	def pre_order_traversal(current_node = self, &block)
+		yield current_node
 
-		if node.left
-			pre_order_traversal(node.left, &block) 
+		if current_node.left
+			pre_order_traversal(current_node.left, &block) 
 		end
 
-		if node.right
-			pre_order_traversal(node.right, &block)
+		if current_node.right
+			pre_order_traversal(current_node.right, &block)
 		end
 	end
 end
