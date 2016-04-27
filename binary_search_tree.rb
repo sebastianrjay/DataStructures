@@ -50,40 +50,86 @@ module BreadthFirstTraversal
 end
 
 module DepthFirstTraversal
-	def in_order_traversal(current_node = self, &block)
-		if current_node.left
-			in_order_traversal(current_node.left, &block) 
-		end
+	def in_order_traversal(max_visited_nodes = -1, current_node = self, &block)
+		@visited_nodes = 0
 
-		yield current_node
+		(traverse_in_order = ->(max_visited_nodes, current_node = self, &block) {
+	    if current_node.left
+				traverse_in_order.(max_visited_nodes, current_node.left, &block) 
+			end
 
-		if current_node.right
-			in_order_traversal(current_node.right, &block)
-		end
+			return if @visited_nodes == max_visited_nodes
+
+			@visited_nodes += 1 if max_visited_nodes > 0
+
+			yield current_node
+
+			if current_node.right
+				traverse_in_order.(max_visited_nodes, current_node.right, &block)
+			end
+	  }).(max_visited_nodes, current_node = self, &block)
 	end
 
-	def post_order_traversal(current_node = self, &block)
-		if current_node.left
-			pre_order_traversal(current_node.left, &block) 
-		end
+	def post_order_traversal(max_visited_nodes = -1, current_node = self, &block)
+		@visited_nodes = 0
 
-		if current_node.right
-			pre_order_traversal(current_node.right, &block)
-		end
+		(traverse_post_order = ->(max_visited_nodes, current_node = self, &block) {
+	    if current_node.left
+				traverse_post_order.(max_visited_nodes, current_node.left, &block) 
+			end
 
-		yield current_node
+			if current_node.right
+				traverse_post_order.(max_visited_nodes, current_node.right, &block)
+			end
+
+			return if @visited_nodes == max_visited_nodes
+
+			@visited_nodes += 1 if max_visited_nodes > 0
+
+			yield current_node
+
+	  }).(max_visited_nodes, current_node = self, &block)
 	end
 
-	def pre_order_traversal(current_node = self, &block)
-		yield current_node
+	def pre_order_traversal(max_visited_nodes = -1, current_node = self, &block)
+		@visited_nodes = 0
 
-		if current_node.left
-			pre_order_traversal(current_node.left, &block) 
-		end
+		(traverse_pre_order = ->(max_visited_nodes, current_node = self, &block) {
+			return if @visited_nodes == max_visited_nodes
 
-		if current_node.right
-			pre_order_traversal(current_node.right, &block)
-		end
+			@visited_nodes += 1 if max_visited_nodes > 0
+
+			yield current_node
+
+	    if current_node.left
+				traverse_pre_order.(max_visited_nodes, current_node.left, &block) 
+			end
+
+			if current_node.right
+				traverse_pre_order.(max_visited_nodes, current_node.right, &block)
+			end
+
+	  }).(max_visited_nodes, current_node = self, &block)
+	end
+
+	def reverse_traversal(max_visited_nodes = -1, current_node = self, &block)
+		@visited_nodes = 0
+
+		(traverse_in_reverse = ->(max_visited_nodes, current_node = self, &block) {
+	    if current_node.right
+				traverse_in_reverse.(max_visited_nodes, current_node.right, &block)
+			end
+
+			return if @visited_nodes == max_visited_nodes
+			
+			@visited_nodes += 1 if max_visited_nodes > 0
+
+			yield current_node
+
+			if current_node.left
+				traverse_in_reverse.(max_visited_nodes, current_node.left, &block) 
+			end
+	  }).(max_visited_nodes, current_node = self, &block)
 	end
 end
 
