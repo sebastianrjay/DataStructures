@@ -1,94 +1,86 @@
-class Heap
+class BinaryHeap
 	def initialize(comparator)
 		raise "Invalid comparator" unless [:<, :>].include?(comparator)
-		@comparator = comparator
-		@elements = []
+		@comparator, @elements = comparator, []
 	end
 
-	def push(num)
-		@elements << num
-		heapify_up!
-		num
+	def count
+		@elements.length
+	end
+
+	def peek
+		@elements.first
 	end
 
 	def pop
-		num = @elements.first
+		val = @elements.first
 		heapify_down!
-		num
+		val
+	end
+
+	def push(val)
+		@elements << val
+		heapify_up!
+		val
 	end
 
 	private
 
-	def heapify_up!
-		idx = @elements.length - 1
-
-		until (parent_index = parent_index(idx)) < 0
-			if @elements[idx].send(@comparator, @elements[parent_index])
-				swap_elements(idx, parent_index)
-			else
-				break
-			end		
-
-			idx = parent_index
-		end
+	def heap_condition_is_satisfied?(parent_idx, child_idx)
+		@elements[parent_idx].send("#{@comparator}=", @elements[child_idx])
 	end
 
 	def heapify_down!
 		swap_elements(0, @elements.length - 1)
 		@elements.pop
-		idx = 0
+		parent_idx = 0
 
-		until (swap_idx = heapify_down_child_swap_index(idx)) == -1
-			if @elements[swap_idx].send(@comparator, @elements[idx])
-				swap_elements(idx, swap_idx)
-			else
-				break
-			end
-
-			idx = swap_idx
+		until (child_to_swap_idx = heapify_down_child_swap_index(parent_idx)).nil?
+			break if heap_condition_is_satisfied?(parent_idx, child_to_swap_idx)
+				
+			swap_elements(parent_idx, child_to_swap_idx)
+			parent_idx = child_to_swap_idx
 		end
+	end
+
+	def heapify_up!
+		child_idx = @elements.length - 1
+
+		until (parent_idx = parent_index(child_idx)).nil?
+			break if heap_condition_is_satisfied?(parent_idx, child_idx)
+
+			swap_elements(child_idx, parent_idx)	
+			child_idx = parent_idx
+		end
+	end
+
+	def heapify_down_child_swap_index(parent_idx)
+		[(2 * parent_idx) + 1, (2 * parent_idx) + 2]
+			.select { |idx| idx < count }
+			.send("#{@comparator == :> ? 'max' : 'min'}_by") { |idx| @elements[idx] }
+	end
+
+	def parent_index(child_idx)
+		(parent_idx = (child_idx - 1) / 2) >= 0 ? parent_idx : nil
 	end
 
 	def swap_elements(idx1, idx2)
 		@elements[idx1], @elements[idx2] = @elements[idx2], @elements[idx1]
 	end
-
-	def parent_index(child_idx)
-		(child_idx - 1) / 2
-	end
-
-	def child_indexes(parent_idx)
-		[(2 * parent_idx) + 1, (2 * parent_idx) + 2]
-	end
-
-	def heapify_down_child_swap_index(parent_idx)
-		return -1 if child_indexes(parent_idx).last >= @elements.length
-		element_picker = (@comparator == :> ? :max : :min)
-
-		swapped_child = child_indexes(parent_idx)
-			.map {|c_idx| @elements[c_idx] }
-			.send(element_picker)
-
-		child_indexes(parent_idx).find { |c_idx| @elements[c_idx] == swapped_child }
-	end
 end
 
-class MaxHeap < Heap
+class BinaryMaxHeap < BinaryHeap
 	def initialize
 		super(:>)
 	end
 
-	def max
-		@elements.first
-	end
+	alias_method :max, :peek
 end
 
-class MinHeap < Heap
+class BinaryMinHeap < BinaryHeap
 	def initialize
 		super(:<)
 	end
 
-	def min
-		@elements.first
-	end
+	alias_method :min, :peek
 end
