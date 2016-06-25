@@ -26,19 +26,25 @@ class BinaryHeap
 
 	private
 
+	def child_to_swap_index(parent_idx)
+		[(2 * parent_idx) + 1, (2 * parent_idx) + 2]
+			.select { |idx| idx < count }
+			.send("#{@comparator == :> ? :max : :min}_by") { |idx| @elements[idx] }
+	end
+
 	def heap_condition_is_satisfied?(parent_idx, child_idx)
 		@elements[parent_idx].send("#{@comparator}=", @elements[child_idx])
 	end
 
 	def heapify_down!
-		swap_elements(0, @elements.length - 1)
+		swap_elements!(0, @elements.length - 1)
 		@elements.pop
 		parent_idx = 0
 
-		until (child_to_swap_idx = heapify_down_child_swap_index(parent_idx)).nil?
+		until (child_to_swap_idx = child_to_swap_index(parent_idx)).nil?
 			break if heap_condition_is_satisfied?(parent_idx, child_to_swap_idx)
 				
-			swap_elements(parent_idx, child_to_swap_idx)
+			swap_elements!(parent_idx, child_to_swap_idx)
 			parent_idx = child_to_swap_idx
 		end
 	end
@@ -49,22 +55,16 @@ class BinaryHeap
 		until (parent_idx = parent_index(child_idx)).nil?
 			break if heap_condition_is_satisfied?(parent_idx, child_idx)
 
-			swap_elements(child_idx, parent_idx)	
+			swap_elements!(child_idx, parent_idx)	
 			child_idx = parent_idx
 		end
 	end
 
-	def heapify_down_child_swap_index(parent_idx)
-		[(2 * parent_idx) + 1, (2 * parent_idx) + 2]
-			.select { |idx| idx < count }
-			.send("#{@comparator == :> ? 'max' : 'min'}_by") { |idx| @elements[idx] }
-	end
-
 	def parent_index(child_idx)
-		(parent_idx = (child_idx - 1) / 2) >= 0 ? parent_idx : nil
+		child_idx > 0 ? (child_idx - 1) / 2 : nil
 	end
 
-	def swap_elements(idx1, idx2)
+	def swap_elements!(idx1, idx2)
 		@elements[idx1], @elements[idx2] = @elements[idx2], @elements[idx1]
 	end
 end
