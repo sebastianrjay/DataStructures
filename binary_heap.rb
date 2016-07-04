@@ -1,88 +1,80 @@
 class BinaryHeap
-	def initialize(comparator)
-		raise "Invalid comparator" unless [:<, :>].include?(comparator)
-		@comparator, @store = comparator, []
-	end
+  def initialize
+    @store = []
+  end
 
-	def count
-		@store.length
-	end
+  def count
+    @store.length
+  end
 
-	def peek
-		@store.first
-	end
+  def peek
+    @store.first
+  end
 
-	def pop
-		return nil if @store.empty?
-		swap_elements!(0, @store.length - 1)
-		val = @store.pop
-		heapify_down!
-		val
-	end
+  def pop
+    return nil if @store.empty?
+    @store[0], @store[-1] = @store[-1], @store[0]
+    val = @store.pop
+    self.class.heapify_down!(@store)
+    val
+  end
 
-	def push(val)
-		@store << val
-		heapify_up!
-		val
-	end
+  def push(val)
+    @store << val
+    self.class.heapify_up!(@store)
+    val
+  end
 
-	private
-
-	def child_to_swap_index(parent_idx)
-		# Returns the index of the smallest child in a min heap, or the index of the 
+  def self.child_to_swap_index(array, parent_idx, length)
+    # Returns the index of the smallest child in a min heap, or the index of the 
     # largest child in a max heap. Returns nil when parent_idx has no children
-		[(2 * parent_idx) + 1, (2 * parent_idx) + 2]
-			.select { |idx| idx < count }
-			.send("#{@comparator == :> ? :max : :min}_by") { |idx| @store[idx] }
-	end
+    [(2 * parent_idx) + 1, (2 * parent_idx) + 2]
+      .select { |idx| idx < length } # Only keep indexes within range of length
+      .send("#{@comparator == :> ? :max : :min}_by") { |idx| array[idx] }
+  end
 
-	def heap_condition_is_satisfied?(parent_idx, child_idx)
-		@store[parent_idx].send("#{@comparator}=", @store[child_idx])
-	end
+  def self.heapify_down!(array, len = array.length)
+    parent_idx = 0
 
-	def heapify_down!
-		parent_idx = 0
+    until (child_idx = child_to_swap_index(array, parent_idx, len)).nil?  
+      break if heap_property_is_valid?(array, parent_idx, child_idx)
 
-		until (child_to_swap_idx = child_to_swap_index(parent_idx)).nil?
-			break if heap_condition_is_satisfied?(parent_idx, child_to_swap_idx)
-				
-			swap_elements!(parent_idx, child_to_swap_idx)
-			parent_idx = child_to_swap_idx
-		end
-	end
+      array[parent_idx], array[child_idx] = array[child_idx], array[parent_idx]
+      parent_idx = child_idx
+    end
 
-	def heapify_up!
-		child_idx = @store.length - 1
+    array
+  end
 
-		until (parent_idx = parent_index(child_idx)).nil?
-			break if heap_condition_is_satisfied?(parent_idx, child_idx)
+  def self.heapify_up!(array, child_idx = array.length - 1)
+    until (parent_idx = parent_index(child_idx)).nil?
+      break if heap_property_is_valid?(array, parent_idx, child_idx)
 
-			swap_elements!(child_idx, parent_idx)	
-			child_idx = parent_idx
-		end
-	end
+      array[parent_idx], array[child_idx] = array[child_idx], array[parent_idx]
+      child_idx = parent_idx
+    end
 
-	def parent_index(child_idx)
-		child_idx > 0 ? (child_idx - 1) / 2 : nil
-	end
+    array
+  end
 
-	def swap_elements!(idx1, idx2)
-		@store[idx1], @store[idx2] = @store[idx2], @store[idx1]
-	end
+  def self.heap_property_is_valid?(array, parent_idx, child_idx)
+    array[parent_idx].send("#{@comparator}=", array[child_idx])
+  end
+
+  def self.parent_index(child_idx)
+    child_idx > 0 ? (child_idx - 1) / 2 : nil
+  end
 end
 
 class BinaryMaxHeap < BinaryHeap
-	def initialize
-		super(:>)
-	end
+  # Defined as instance variable; class variable scope is limited to own class
+  @comparator = :>
 
-	alias_method :max, :peek
+  alias_method :max, :peek
 end
 
 class BinaryMinHeap < BinaryHeap
-	def initialize
-		super(:<)
-	end
+  @comparator = :<
 
-	alias_method :min, :peek
+  alias_method :min, :peek
 end
