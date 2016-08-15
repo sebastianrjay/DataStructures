@@ -1,7 +1,5 @@
 # About #
-This is the repository where I implement some common data structures. I've put 
-my graph implementations in 
-[their own repository, called "Graphs."](https://https://github.com/sebastianrjay/Graphs)
+This is the repository where I implement some common data structures. I've moved my [graph](https://github.com/sebastianrjay/Graphs) and [binary heap](https://github.com/sebastianrjay/BinaryHeap) implementations to their own repositories.
 
 # Tests #
 So far, the tests in the `spec` directory test only my `Trie` implementation.
@@ -25,6 +23,8 @@ stores one new node for each value inserted, regardless if the value has already
 been stored to another node in the tree. It also deletes only one node when 
 removing a value existing in multiple nodes. Simpler (and perhaps more elegant) 
 implementations prohibit insertion of duplicate values.
+
+UPDATE: Each traversal method (in-order, reverse, pre-order and post-order) now allows one to optionally pass in a maximum number of nodes, to limit the number of nodes traversed in each method call. These methods also take a starting node as an optional second parameter.
 
 ## Doubly Linked List ##
 Not much to say here. The Ruby version is instantiated from an array of nodes, 
