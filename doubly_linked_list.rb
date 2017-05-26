@@ -1,8 +1,7 @@
 require 'set'
 
 class DoublyLinkedListNode
-	attr_accessor :next, :prev
-	attr_reader :value
+	attr_accessor :next, :prev, :value
 
 	def initialize(value)
 		@value = value
@@ -12,7 +11,7 @@ end
 class DoublyLinkedList
 	attr_accessor :head, :tail
 
-	def initialize(node_values_array)
+	def initialize(node_values_array = [])
 		@nodes, @node_value_counts, previous_node = Set.new, Hash.new(0), nil
 
 		node_values_array.each_with_index do |node_value, i|
@@ -35,12 +34,41 @@ class DoublyLinkedList
 		end
 	end
 
+	def append(new_node, append_to = @tail)
+		return nil if @nodes.include?(new_node)
+		@nodes << new_node
+		@node_value_counts[new_node.value] += 1
+
+		new_next_node = append_to.next unless append_to.nil?
+		new_node.prev = append_to
+		append_to.next = new_node unless append_to.nil?
+		new_node.next = new_next_node unless new_next_node.nil?
+		new_next_node.prev = new_node unless new_next_node.nil?
+
+		@head = new_node if @head.nil?
+		@tail = new_node if append_to == @tail
+
+		new_node
+	end
+
 	def node_count(value = nil)
 		# Counts the number of occurrences of a specific node value within the list
 		# in O(1) time; counts the total number of nodes if no value is given.
 		return @nodes.count unless value
 
 		@node_value_counts[value]
+	end
+
+	def prepend(new_node)
+		return nil if @nodes.include?(new_node)
+		@nodes << new_node
+		@node_value_counts[new_node.value] += 1
+
+		new_node.next = head
+		head.prev = new_node
+		@head = new_node
+
+		new_node
 	end
 
 	def remove(node)
