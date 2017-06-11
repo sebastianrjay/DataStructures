@@ -27,16 +27,18 @@ implementations prohibit insertion of duplicate values.
 UPDATE: Each traversal method (in-order, reverse, pre-order and post-order) now allows one to optionally pass in a maximum number of nodes, to limit the number of nodes traversed in each method call. These methods also take a starting node as an optional second parameter.
 
 ## Doubly Linked List ##
-Not much to say here. The Ruby version is instantiated from an array of nodes, 
-while the JavaScript version's constructor takes a head and tail node as 
-arguments, forcing the programmer to later add other nodes via the appendNode 
-or insertNode methods.
+Standard Doubly Linked List implementation performing all operations in `O(1)` 
+time, excluding `#to_a` and `#values` array conversion methods. Features `O(1)` 
+`#has_value?(value)` and `#node_count` operations, thanks to an internal hash 
+table.
 
 ## Least Recently Used Cache (LRU Cache) ##
-Whee, ES6. The cache has a limited size, as specified in the constructor. The 
-fetchCallbackForMissingData argument to the LRUCache#get method is a callback 
-that returns data from someplace external to the cache, and is invoked if the 
-cache does not contain the data sought when invoking LRUCache#get.
+Stores data under a lookup key, and allows the end user to specify a max cache 
+size in bytes on instantiation. Performs all operations including `get(key)` and 
+`set(key, data)` in `O(1)` time.
+
+The purpose is to cache data, but to limit memory usage and store only the most 
+recently accessed data. 
 
 ## Trie ##
 This data structure allows one to check if a string is a valid prefix or a valid 
