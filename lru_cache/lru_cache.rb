@@ -1,5 +1,5 @@
 require 'objspace'
-require './doubly_linked_list'
+require_relative '../doubly_linked_list/doubly_linked_list'
 
 # Least Recently Used Cache
 class LRUCache
