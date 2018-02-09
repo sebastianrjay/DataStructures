@@ -10,6 +10,15 @@ class LRUCache
     @max_bytes = max_bytes # 1 MB max size by default
   end
 
+  def delete(key) # Deletes and returns data stored under key
+    return nil unless @nodes[key]
+
+    node = @nodes[key]
+    @list.remove(node)
+    @nodes.delete(key)
+    data(node)
+  end
+
   def get(key) # Returns data stored under key
     return nil unless @nodes[key]
 
@@ -31,7 +40,7 @@ class LRUCache
     @list.tail ? @list.tail.value : nil
   end
 
-  def set(key, data) # Returns data set under key
+  def set(key, data) # Sets and returns data stored under key
     new_node = DoublyLinkedListNode.new([key, data])
     new_memory = contained_bytes(new_node)
     is_full = @bytes + new_memory > @max_bytes

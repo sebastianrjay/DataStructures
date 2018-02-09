@@ -1,13 +1,12 @@
 # About
-I set out to write the perfect Ruby binary heap, abstracted to work as a min heap
-or a max heap. It also includes a heap sort implementation using `O(1)` extra 
-memory.
+I set out to write the perfect Ruby binary heap, abstracted to work as a min 
+heapor a max heap. It also includes a heap sort implementation using `O(1)` 
+extra memory.
 
 # Description
-I wrote a previous binary min heap in 50 lines, but instead I chose this overly 
-verbose monstrosity. 80 lines define a binary min heap and max heap, with 
-pedantically descriptive method names. It can easily be modified to store a key 
-and a value at each heap node, like [this binary heap/priority queue](https://gist.github.com/aspyct/3428688).
+80 lines define a binary min heap and max heap in this repository. It can easily be modified to store a key and a value at each heap node, like 
+[this binary heap/priority queue](https://gist.github.com/aspyct/3428688). I 
+wrote a previous binary min heap in 50 lines, shown below.
 
 My previous 50-line binary min heap (passes all tests):
 
