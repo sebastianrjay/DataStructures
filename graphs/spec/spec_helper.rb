@@ -13,4 +13,14 @@ def instantiate_nodes
 	@node3 = Node.new(6)
 	@node4 = Node.new(7)
 	@node5 = Node.new(8)
+  @node6 = Node.new(9)
+end
+
+def create_edges(graph)
+  graph.add_edge_by_nodes(@node1, @node3)
+  graph.add_edge_by_nodes(@node1, @node4)
+  graph.add_edge_by_nodes(@node4, @node5)
+  graph.add_edge_by_nodes(@node5, @node6)
+  graph.add_edge_by_nodes(@node2, @node3)
+  graph.add_edge_by_nodes(@node2, @node4)
 end

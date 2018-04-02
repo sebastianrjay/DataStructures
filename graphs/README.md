@@ -7,8 +7,8 @@ Dijkstra's algorithm that works for both graphs.
 # Tests
 
 The RSpec tests in the spec folder exhaustively test my edge, node and graph 
-implementations. I have also added tests for my basic implementation of 
-Dijkstra's algorithm.
+implementations. I have also added tests for my implementations of 
+Dijkstra's algorithm and Kahn's topological sort algorithm.
 
 To run all RSpec tests, run `rspec spec` from the `Graphs` root directory. 
 Assuming Ruby is [installed](https://github.com/rbenv/rbenv), it may be 
@@ -130,7 +130,7 @@ number of edges connected to the node.
 number of edges in the DirectedGraph instance. We must search through all edges 
 in the graph because we can only look up edges with two `Node`
 
-# To-Do
+# To Do
 
 * Further improve abstraction of RSpec tests
 * Consider making `Node#neighbors` non-directional in the `DirectedGraph`. 

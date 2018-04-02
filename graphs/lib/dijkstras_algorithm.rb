@@ -28,7 +28,7 @@ def dijkstra_shortest_path(origin_node, destination_node, graph)
       end
     end
   end
- 
+
   shortest_path << (this_node = destination_node)
   until this_node == origin_node
     # Use push (O(1) amortized) instead of unshift (O(n))

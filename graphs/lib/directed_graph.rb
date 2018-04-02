@@ -3,7 +3,7 @@ require 'directed_edge'
 require 'node'
 require 'set'
 
-class DirectedGraph < AdjacencyListGraph::Base
+class DirectedGraph < AdjacencyListGraph
   def add_edge(edge)
     unless has_edge?(edge)
       origin, destination = edge.origin, edge.destination
@@ -15,7 +15,7 @@ class DirectedGraph < AdjacencyListGraph::Base
     end
   end
 
-  def add_edge_by_nodes(origin_node, destination_node, value = nil)
+  def add_edge_by_nodes(origin_node, destination_node, value = 1)
     unless connected_nodes?(origin_node, destination_node)
       add_edge(DirectedEdge.new(origin_node, destination_node, value))
     end

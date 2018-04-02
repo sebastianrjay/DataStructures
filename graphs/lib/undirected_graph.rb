@@ -3,7 +3,7 @@ require 'undirected_edge'
 require 'node'
 require 'set'
 
-class UndirectedGraph < AdjacencyListGraph::Base
+class UndirectedGraph < AdjacencyListGraph
   def add_edge(edge)
     unless has_edge?(edge)
       node1, node2 = edge.nodes[0], edge.nodes[1]
@@ -16,7 +16,7 @@ class UndirectedGraph < AdjacencyListGraph::Base
     end
   end
 
-  def add_edge_by_nodes(node1, node2, value = nil)
+  def add_edge_by_nodes(node1, node2, value = 1)
     unless connected_nodes?(node1, node2)
       add_edge(UndirectedEdge.new(node1, node2, value))
     end
